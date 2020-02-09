@@ -4,7 +4,7 @@
 #include <tf2_stocks>
 
 #define SUIT_MAX 100 
-#define Charging_Seconds 1.0
+#define Charging_Seconds 0.5
 #define Suit_Damaged_Formula(%1) ( %1 / 4 )
  
 bool HEV_enable;
@@ -114,6 +114,9 @@ return Plugin_Continue;
 
 public void OnGameFrame(){
 
+if(ED_hev_suit.IntValue == 1)HEV_enable = true;
+else HEV_enable = false;
+
 if(HEV_enable){
 
 for(int i = 1; i <= GetClientCount(); i++){
@@ -178,7 +181,7 @@ char Info2[50];
 char clientname[128];
 GetClientName(target, clientname, 128);
 Format(Info2, 50, "이름: %s\n상대방 슈트: %d%%", clientname, suit[target], health[target]);
-PrintHudMsg(i, Info2, {10, 255, 10, 255}, {10, 255, 10, 255}, -0.030, -1.0, 0.01, 2, 0.1, 0.1);
+PrintHudMsg(i, Info2, {10, 255, 10, 255}, {10, 255, 10, 255}, -0.030, -1.0, 0.01, 2, 0.01, 0.01);
 }
 
 }
@@ -212,7 +215,7 @@ _cond[i] = "매우 좋음";
 
 char Info[300];
 Format(Info, 300, "클래스: %s\n체력 상태: %s\n주무기 상태: %d | %d\n보조무기 상태: %d | %d\n슈트: %d", class[i], _cond[i], pr[1], pr[2], sc[1], sc[2], suit[i]);
-PrintHudMsg(i, Info, {255, 165, 0, 255}, {255, 165, 0, 255}, 0.030, -1.0, GetGameFrameTime(), 3, 0.05, 0.05);
+PrintHudMsg(i, Info, {255, 165, 0, 255}, {255, 165, 0, 255}, 0.030, -1.0, GetGameFrameTime(), 3, 0.01, 0.01);
 
 }
 else{
@@ -233,7 +236,6 @@ suit[i] = 0;
 
 public void OnPluginStart(){
 ED_hev_suit = CreateConVar("ED_hev_suit", "0", "", FCVAR_REPLICATED, true, 0.0, true, 1.0);
-HookConVarChange(ED_hev_suit,  ED_hev_suitCB);
 HookEvent("player_spawn", PlayerSpawn);
 HookEvent("player_hurt", PlayerHurt);
 RegAdminCmd("sm_setsuit", setsuit, ADMFLAG_SLAY);
@@ -267,10 +269,6 @@ if(suit[target_list[i]] > SUIT_MAX)suit[target_list[i]] = SUIT_MAX;
 }
  
 return Plugin_Handled;
-}
-
-public void ED_hev_suitCB(ConVar convar, const char[] oldValue, const char[] newValue){
-HEV_enable = ED_hev_suit.BoolValue;
 }
 
 public void PlayerHurt(Event event, const char[] name, bool dontBroadcast){
