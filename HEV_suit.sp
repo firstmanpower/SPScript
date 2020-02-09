@@ -238,37 +238,6 @@ public void OnPluginStart(){
 ED_hev_suit = CreateConVar("ED_hev_suit", "0", "", FCVAR_REPLICATED, true, 0.0, true, 1.0);
 HookEvent("player_spawn", PlayerSpawn);
 HookEvent("player_hurt", PlayerHurt);
-RegAdminCmd("sm_setsuit", setsuit, ADMFLAG_SLAY);
-}
-
-public Action setsuit(int client, int args){
-
-if(HEV_enable){
-
-char arg1[32], arg2[32];
-
-GetCmdArg(1, arg1, sizeof(arg1));
-GetCmdArg(2, arg2, sizeof(arg2));
-
-if(args != 2)return Plugin_Handled;
-
-char target_name[MAX_TARGET_LENGTH];
-int target_list[MAXPLAYERS+1], target_count;
-bool tn_is_ml;
- 
-if ((target_count = ProcessTargetString(arg1,client,target_list,MAXPLAYERS,COMMAND_FILTER_ALIVE,target_name,MAX_TARGET_LENGTH,tn_is_ml)) <= 0){
-	ReplyToTargetError(client, target_count);
-	return Plugin_Handled;
-}
- 
-for (int i = 0; i < target_count; i++){
-suit[target_list[i]] = StringToInt(arg2);
-if(suit[target_list[i]] > SUIT_MAX)suit[target_list[i]] = SUIT_MAX;
-}
-
-}
- 
-return Plugin_Handled;
 }
 
 public void PlayerHurt(Event event, const char[] name, bool dontBroadcast){
@@ -276,7 +245,6 @@ public void PlayerHurt(Event event, const char[] name, bool dontBroadcast){
 if(HEV_enable){
 
 int client = GetClientOfUserId(event.GetInt("userid"));
-int attacker = GetClientOfUserId(event.GetInt("attacker"));
 int damage = event.GetInt("damageamount");
 if(suit[client] != 0){
 suit[client] -= Suit_Damaged_Formula(damage);
