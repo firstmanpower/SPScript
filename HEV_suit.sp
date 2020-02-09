@@ -211,7 +211,7 @@ _cond[i] = "매우 좋음";
 
 
 char Info[300];
-Format(Info, 300, "클래스: %s\n체력 상태: %s\n주무기 상태: %d | %d\n보조무기 상태: %d | %d\n슈트: %d\n\n\n\n\n슈트 버전: 베타", class[i], _cond[i], pr[1], pr[2], sc[1], sc[2], suit[i]);
+Format(Info, 300, "클래스: %s\n체력 상태: %s\n주무기 상태: %d | %d\n보조무기 상태: %d | %d\n슈트: %d", class[i], _cond[i], pr[1], pr[2], sc[1], sc[2], suit[i]);
 PrintHudMsg(i, Info, {255, 165, 0, 255}, {255, 165, 0, 255}, 0.030, -1.0, GetGameFrameTime(), 3, 0.05, 0.05);
 
 }
